@@ -2,7 +2,7 @@ using API.DTO;
 using AutoMapper;
 using Core.Models;
 
-namespace API.Controllers.Helper
+namespace API.Helper
 {
     public class MappingProfile : Profile
     {
