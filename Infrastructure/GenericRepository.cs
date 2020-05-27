@@ -16,6 +16,9 @@ namespace Infrastructure
             _context = context;
 
         }
+
+        
+
         public async Task<IReadOnlyList<T>> GetAllAsyc()
         {
             return await _context.Set<T>().ToListAsync();
@@ -35,6 +38,11 @@ namespace Infrastructure
         public async  Task<IReadOnlyList<T>> ListAsync(ISpecification<T> spec)
         {
             return await ApplySpecification(spec).ToListAsync();
+        }
+
+        public async Task<int> CountAsync(ISpecification<T> spec)
+        {
+            return await ApplySpecification(spec).CountAsync();
         }
         private IQueryable<T> ApplySpecification(ISpecification<T> spec)
         {

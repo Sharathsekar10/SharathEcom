@@ -1,20 +1,20 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Infrastructure.Data;
 using Core.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Core.Interface;
 using Core.Specification;
 using API.DTO;
-using System.Linq;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using API.Error;
+using API.Helper;
+using Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers
 {
-   
+
     public class ProductsController : BaseController
     {
         private readonly IGenericRepository<ProductType> _typeRepo;
@@ -25,25 +25,31 @@ namespace API.Controllers
 
         private readonly IMapper _mapper;
 
+         private readonly AppDbContext _context;
+
         public ProductsController(IGenericRepository<Product> productRepo,
                                   IGenericRepository<ProductBrand> brandRepo,
                                   IGenericRepository<ProductType> typeRepo,
-                                  IMapper mapper
+                                  IMapper mapper,
+                                  AppDbContext context
                                   )
         {
             _typeRepo = typeRepo;
             _productRepo = productRepo;
             _brandRepo = brandRepo;
             _mapper = mapper;
+            _context = context;
 
         }
         [HttpGet]
-        public async Task<ActionResult<IReadOnlyList<ProductDTO>>> GetProducts()
+        public async Task<ActionResult<Pagination<ProductDTO>>> GetProducts([FromQuery] ProductSpecificationParam productsParam)
         {
-            var productSpec = new ProductSpecification();
+            var productSpec = new ProductSpecification(productsParam);
+            var countSpec = new ProductSpecificationWithCount(productsParam);
             var products = await _productRepo.ListAsync(productSpec);
-
-              return Ok( _mapper.Map<IReadOnlyList<Product>,IReadOnlyList<ProductDTO>>(products));
+            var count = await _productRepo.CountAsync(countSpec);
+            var data = _mapper.Map<IReadOnlyList<Product>,IReadOnlyList<ProductDTO>>(products);
+              return Ok( new Pagination<ProductDTO>(productsParam.PageIndex,productsParam.PageSize,count,data));
         }
 
         [HttpGet("{id}")]
@@ -74,6 +80,13 @@ namespace API.Controllers
             var productTypes = await _typeRepo.GetAllAsyc();
 
             return Ok(productTypes);
+        }
+
+        [HttpGet("dummy")]
+        public async Task<ActionResult<List<ProductDTO>>> DummyProducts()
+        {
+            var product = await  _context.Products.ToListAsync();
+            return   _mapper.Map<List<Product>,List<ProductDTO>>(product);
         }
     }
 }
