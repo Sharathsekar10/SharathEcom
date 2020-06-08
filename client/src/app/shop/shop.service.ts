@@ -4,6 +4,7 @@ import { IPagination } from '../shared/models/pagination';
 import { IProductBrand } from '../shared/models/productbrands';
 import { IProductTypes } from '../shared/models/producttypes';
 import { ShopParams } from '../shared/models/shopParams';
+import { IProduct } from '../shared/models/product';
 
 @Injectable({
   providedIn: 'root'
@@ -28,6 +29,10 @@ export class ShopService {
       params = params.append('search', shopParams.search);
     }
     return this.httpclient.get<IPagination>(this.baseUrl + 'products', {params});
+  }
+
+  getProduct(id: number){
+    return this.httpclient.get<IProduct>(this.baseUrl + 'products/' + id);
   }
 
   getBrands(){
