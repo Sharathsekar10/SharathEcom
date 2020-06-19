@@ -7,6 +7,8 @@ import { CoreModule } from './core/core.module';
 import { ShopModule } from './shop/shop.module';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { ErrorInterceptors } from './core/Interceptors/errorInterceptors';
+import { NgxSpinnerModule } from 'ngx-spinner';
+import { LoadingInterceptors } from './core/Interceptors/loadingInterceptors';
 
 @NgModule({
   declarations: [
@@ -18,10 +20,12 @@ import { ErrorInterceptors } from './core/Interceptors/errorInterceptors';
     BrowserAnimationsModule,
     CoreModule,
     ShopModule,
-    HttpClientModule
+    HttpClientModule,
+    NgxSpinnerModule
   ],
   providers: [
-    {provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptors, multi: true}
+    {provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptors, multi: true},
+    {provide: HTTP_INTERCEPTORS, useClass: LoadingInterceptors, multi: true}
   ],
   bootstrap: [AppComponent]
 })

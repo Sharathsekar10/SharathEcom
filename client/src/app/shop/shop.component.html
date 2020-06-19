@@ -2,45 +2,51 @@
     <div class="row">
 
         <section class="col-3">
-            <h5 class="text-warning ml-3">Sort</h5>
-            <select class="custom-select mb-3" (change)="onSortSelected($event.target.value)">
-                Sort by
-                <option *ngFor='let sort of sortList' [value]="sort.value">
-                    {{sort.name}}
-                </option>
-            </select>
-
-            <h5 class="text-warning ml-3">Brands</h5>
-            <ul class="list-group my-3">
-                <li class="list-group-item pointer-cursor" *ngFor='let brand of productBrands'
-                    [class.active]='brand.id === this.shopParams.brandId' (click)='onBrandSelected(brand.id)'>
-                    {{brand.name}}
-                </li>
-            </ul>
-            <h5 class="text-warning ml-3">Types</h5>
-            <ul class="list-group my-3">
-                <li class="list-group-item pointer-cursor" *ngFor='let type of productTypes'
-                    [class.active]='type.id === this.shopParams.typeId' (click)='onTypeSelected(type.id)'>
-                    {{type.name}}
-                </li>
-            </ul>
+            <ng-container *ngIf="productTypes && productBrands">
+                <h5 class="text-warning ml-3">Sort</h5>
+                <select class="custom-select mb-3" (change)="onSortSelected($event.target.value)">
+                    Sort by
+                    <option *ngFor='let sort of sortList' [value]="sort.value">
+                        {{sort.name}}
+                    </option>
+                </select>
+    
+                <h5 class="text-warning ml-3">Brands</h5>
+                <ul class="list-group my-3">
+                    <li class="list-group-item pointer-cursor" *ngFor='let brand of productBrands'
+                        [class.active]='brand.id === this.shopParams.brandId' (click)='onBrandSelected(brand.id)'>
+                        {{brand.name}}
+                    </li>
+                </ul>
+                <h5 class="text-warning ml-3">Types</h5>
+                <ul class="list-group my-3">
+                    <li class="list-group-item pointer-cursor" *ngFor='let type of productTypes'
+                        [class.active]='type.id === this.shopParams.typeId' (click)='onTypeSelected(type.id)'>
+                        {{type.name}}
+                    </li>
+                </ul>
+            </ng-container>
+            
         </section>
 
         <section class="col-9">
-            <div class="d-flex align-items-center">
-               <app-page-header
-               [totalCount] ="this.totalCount"
-               [pageNumber] = "this.shopParams.pageNumber"
-               [pageSize] = "this.shopParams.pageSize">
-
-               </app-page-header>
-
-                <div class="form-inline mt-2">
-                    <input class="form-control mr-2" (keyup.enter)="onSearch()" #search style="width: 300px" placeholder="Search" type="text">
-                    <button class="btn btn-outline-primary my-2" (click)="onSearch()">Search</button>
-                    <button class="btn btn-outline-success ml-2 my-2 " (click)="onReset()">Reset</button>
-                </div>
-            </div>
+            <ng-container *ngIf="products">
+                <div class="d-flex align-items-center">
+                    <app-page-header
+                    [totalCount] ="this.totalCount"
+                    [pageNumber] = "this.shopParams.pageNumber"
+                    [pageSize] = "this.shopParams.pageSize">
+     
+                    </app-page-header>
+     
+                     <div class="form-inline mt-2">
+                         <input class="form-control mr-2" (keyup.enter)="onSearch()" #search style="width: 300px" placeholder="Search" type="text">
+                         <button class="btn btn-outline-primary my-2" (click)="onSearch()">Search</button>
+                         <button class="btn btn-outline-success ml-2 my-2 " (click)="onReset()">Reset</button>
+                     </div>
+                 </div>
+            </ng-container>
+           
 
 
             <div class="row m-3">
